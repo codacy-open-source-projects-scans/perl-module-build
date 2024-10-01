@@ -1,0 +1,27 @@
+language: perl
+notifications:
+  on_success: never
+  on_failure: always
+  irc: "irc.perl.org#toolchain"
+  email: false
+before_install:
+  - cpanm CPAN::Meta
+matrix:
+  include:
+    - perl: "5.20"
+      dist: trusty
+    - perl: "5.18"
+      dist: trusty
+    - perl: "5.16"
+      dist: trusty
+    - perl: "5.14"
+      dist: trusty
+    - perl: "5.12"
+      dist: trusty
+    - perl: "5.10"
+      dist: trusty
+    - perl: "5.8"
+      dist: trusty
+script:
+  - perl Build.PL && ./Build test && ./Build disttest
+  - perl Makefile.PL && make test

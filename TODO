@@ -1,0 +1,74 @@
+-------------------------- TO DO: --------------------------------
+
+* Automatically add anything in configure_requires that is not in
+  build_requires to build_requires instead of complaining about it.
+  If we can detect the error, we can fix it.  We shouldn't make 
+  authors repeat themselves in Build.PL
+
+  - I'm not sure this is correct.  Prereqs shouldn't need to be listed
+    multiple times in META.yml.  Hold off until this is clarified in
+    the META.yml spec.
+
+    - CPAN::Meta::Spec clearly says that configure, runtime and
+      build requirements are needed for "Build", and that
+      configure, runtime, build and test requirements are needed
+      for "Build test". As such, there is no need to duplicate
+      the contents of configure_requires into build_requires.
+
+  - I can't find the mentioned "complaining". Has it been removed?
+
+* Check edge cases for normalize_version -- string "v1.2" might not
+  get normalized, but it should
+
+* Dump better diagnostics if we die() while building ourself
+
+* perllocal.pod? http://rt.cpan.org/Ticket/Display.html?id=14316
+
+* Look at Time::HiRes as a way to get C modules compiled & linked on
+  various weird platforms, and abstract them into a new utility module
+  for this purpose.
+
+* Rethink the whole approach to dependencies.  This means making
+  "requires vs. recommends vs. conflicts" orthogonal to "build-time
+  vs. run-time", recording which dependencies the user chooses to
+  fulfill at install time, and so on.  
+
+  - Defer until after META spec revisions
+
+* Think about how to allow "local policy" configuration, as well as
+"local enhancements" for frequent developers or frequent installers.
+
+* Figure out how to cooperate well with real packaging systems
+(chiefly RPM, Debian, and PPM).  May mean creating packages ourselves,
+may mean creating lists of stuff to let package managers chew on, may
+mean something else.
+
+* When doing an 'install' or 'preinstall' action, create a packlist
+file in a format useful for package managers.  Probably a subtask of
+the above packaging systems task.
+
+-------------------------- DONE: ---------------------------------
+
+* Create a mechanism for really easy data sharing between Build.PL,
+other .PL files, and test scripts.  Probably something like
+$r->notes() from mod_perl would be easy to do.  Even fancier would be
+something like Module::Build->instance() in order to get a M::B object
+or reasonable facsimile.
+
+* Create man pages to install during 'install' action.
+
+* Add a 'distsign' action that uses Module::Signature to provide
+cryptographic authentication to module distributions.
+
+* Figure out how to make the build process work on MacOS
+
+* Add a 'diff' action that compares to previously installed version.
+
+* Write cleanup entries to _build/cleanup immediately, so they still
+get written if an error occurs
+
+* Create a prompt() method similar to ExtUtils::MakeMaker::prompt().
+
+* Create a yorn() method that loops prompt() until it gets a yes/no
+answer. (Created as y_n())
+
