@@ -1,0 +1,56 @@
+=head1 Release instructions for Module::Build
+
+=head2 Prerequisites
+
+Module::Build now bundles it's own release script in the custom subclass
+in inc/.  However, it has some prerequisites:
+
+  Git::Wrapper
+  CPAN::Uploader
+
+=head2 Packaging and shipping
+
+Update Module::Build from the repository and make sure there are no
+uncommitted changes:
+
+  $ git fetch
+  $ git status
+  $ git diff origin/master
+
+See what the last tag was:
+
+  $ git describe
+  0.3605-6-ge176ee6
+
+Pull the logs since that tag and update the Changes file if necessary
+
+  $ git log 0.3605..HEAD
+  ...
+
+  $ vim Changes
+
+If everything is good, just datestamp the version section at the top of
+Changes (e.g. use "r! date" then "kJ" in vim.)
+
+  $ git commit -a -m "Changes - prep for release"
+
+Push all commits to an 'origin' branch:
+
+  $ git push origin master
+
+And we should now be ready for automated shipping:
+
+  $ perl Build.PL
+  $ Build upload
+
+Note that the latter command requires a C<.pause> file as described in
+L<cpan_upload>'s documentation.
+
+=head2 After shipping
+
+Now the release is out and tagged, so it's time to start a
+new version number:
+
+  $ ./devtools/bump_version.pl
+  $ git commit -a -m "Changes, lib/***.pm - bump version"
+
